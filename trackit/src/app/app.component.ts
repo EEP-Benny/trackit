@@ -1,21 +1,44 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { IEntry } from './interfaces/IEntry';
+import { EntryService } from './services/entry.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  constructor(private readonly entryService: EntryService, ) {
+    this.form = new FormGroup({
+      value: new FormControl('', Validators.required),
+      timestamp: new FormControl(new Date()),
+    });
+  }
+
   title = 'TrackIt';
 
-  items = [{
-    name: 'string',
-    description: 'desc',
-    url: 'url',
-  }];
+  form: FormGroup;
+
+  entries: IEntry[] = [];
 
   deferredPrompt: any;
   showButton = false;
+
+  ngOnInit() {
+    this.entries = this.entryService.getAllEntries();
+  }
+
+  addEntry() {
+    console.log(this.form.value);
+    this.entryService.addEntry(this.form.value);
+    this.form.reset({ timestamp: new Date() });
+  }
+
+  setToNow(entry: IEntry) {
+    entry.timestamp = new Date();
+  }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
   onbeforeinstallprompt(e) {

@@ -6,15 +6,25 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <main>
-  <mat-card *ngFor="let item of items">
-    <mat-card-header>
-      <mat-card-title>{{item.name}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      {{item.description}}
-    </mat-card-content>
-    <mat-card-actions>
-      <a mat-raised-button href="{{item.url}}" color="primary">More</a>
-    </mat-card-actions>
-  </mat-card>
+  <form (ngSubmit)="addEntry()" [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Value</mat-label>
+      <input matInput type="number" formControlName="value">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Date and Time</mat-label>
+      <input matInput type="datetime-local" formControlName="timestamp" [matDatepicker]="myDatepicker">
+      <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+      <mat-datepicker #myDatepicker></mat-datepicker>
+    </mat-form-field>
+    <button mat-button color="primary" [disabled]="form.invalid">Add Entry</button>
+  </form>
+
+  <mat-list>
+    <mat-list-item *ngFor="let entry of entries">
+      <p class="time">{{entry.timestamp}}</p>
+      <p class="value">{{entry.value}}</p>
+      <button mat-stroked-button color="primary" (click)="setToNow(entry)">Set to now</button>
+    </mat-list-item>
+  </mat-list>
 </main>

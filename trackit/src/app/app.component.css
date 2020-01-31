@@ -1,0 +1,8 @@
+.value {
+  font-size: x-large;
+  font-weight: bold;
+  text-align: right;
+  padding: 0 1em;
+  width: 5em;
+  margin: auto;
+}
