@@ -5,7 +5,18 @@
   "tasks": [
     {
       "type": "npm",
+      "script": "start",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
       "script": "build -- --prod",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "deploy",
       "group": "build",
       "problemMatcher": []
     }
