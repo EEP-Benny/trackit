@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { IEntry } from './interfaces/IEntry';
+import { IEntry, IEntryWithId } from './interfaces/IEntry';
 import { EntryService } from './services/entry.service';
 
 @Component({
@@ -27,17 +27,25 @@ export class AppComponent implements OnInit {
   showButton = false;
 
   ngOnInit() {
-    this.entries = this.entryService.getAllEntries();
+    this.entryService.fetchAllEntries().then((entriesFromDB) => { this.entries = entriesFromDB; });
   }
 
-  addEntry() {
-    console.log(this.form.value);
-    this.entryService.addEntry(this.form.value);
+  async addEntry() {
+    const entry = this.form.value;
+    const id = await this.entryService.addEntry(entry);
+    this.entries = [{ id, ...entry }, ...this.entries];
     this.form.reset({ timestamp: new Date() });
   }
 
-  setToNow(entry: IEntry) {
+  async setToNow(entry: IEntryWithId) {
     entry.timestamp = new Date();
+    await this.entryService.updateEntry(entry);
+  }
+
+  async deleteEntry(entry: IEntryWithId) {
+    await this.entryService.deleteEntry(entry);
+    const index = this.entries.findIndex(e => e === entry);
+    this.entries.splice(index, 1);
   }
 
   @HostListener('window:beforeinstallprompt', ['$event'])

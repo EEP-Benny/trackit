@@ -1,22 +1,29 @@
 import { Injectable } from '@angular/core';
-import { IEntry } from '../interfaces/IEntry';
+import { IEntry, IEntryWithId } from '../interfaces/IEntry';
+import { DexieService } from './dexie.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EntryService {
 
-  constructor() { }
-
-  private entries: IEntry[] = [];
+  constructor(private dexieService: DexieService) { }
 
   addEntry(entry: IEntry) {
     entry.timestamp = new Date();
-    this.entries.unshift(entry);
+    return this.dexieService.entries.add(entry);
   }
 
-  getAllEntries() {
-    return this.entries;
+  updateEntry(entry: IEntryWithId) {
+    return this.dexieService.entries.put(entry);
+  }
+
+  deleteEntry(entry: IEntryWithId) {
+    return this.dexieService.entries.delete(entry.id);
+  }
+
+  fetchAllEntries() {
+    return this.dexieService.entries.orderBy('timestamp').reverse().toArray();
   }
 }
 
