@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IEntry, IEntryWithId } from './interfaces/IEntry';
 import { EntryService } from './services/entry.service';
 import { trigger, transition, style, animate, query, stagger, animateChild } from '@angular/animations';
+import { PermissionService } from './services/permission.service';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,7 @@ import { trigger, transition, style, animate, query, stagger, animateChild } fro
 })
 export class AppComponent implements OnInit {
 
-  constructor(private readonly entryService: EntryService, ) {
+  constructor(private readonly entryService: EntryService, private readonly permissionService: PermissionService, ) {
     this.form = new FormGroup({
       value: new FormControl('', Validators.required),
       timestamp: new FormControl(new Date()),
@@ -47,9 +48,11 @@ export class AppComponent implements OnInit {
 
   deferredPrompt: any;
   showButton = false;
+  isPersisted = false;
 
   ngOnInit() {
     this.entryService.fetchAllEntries().then((entriesFromDB) => { this.entries = entriesFromDB; });
+    this.permissionService.isStoragePersisted().then((isPersisted) => { this.isPersisted = isPersisted; });
   }
 
   async addEntry() {
@@ -94,5 +97,10 @@ export class AppComponent implements OnInit {
       }
       this.deferredPrompt = null;
     });
+  }
+
+  async askForPermission() {
+    await this.permissionService.persist();
+    this.isPersisted = await this.permissionService.isStoragePersisted();
   }
 }
