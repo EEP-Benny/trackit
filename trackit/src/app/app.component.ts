@@ -50,9 +50,11 @@ export class AppComponent implements OnInit {
   showButton = false;
   isPersisted = false;
 
+  trackByIdFn = (_, entry: IEntryWithId) => entry.id;
+
   ngOnInit() {
-    this.entryService.fetchAllEntries().then((entriesFromDB) => { this.entries = entriesFromDB; });
-    this.permissionService.isStoragePersisted().then((isPersisted) => { this.isPersisted = isPersisted; });
+    (async () => { this.entries = await this.entryService.fetchAllEntries(); })();
+    (async () => { this.isPersisted = await this.permissionService.isStoragePersisted(); })();
   }
 
   async addEntry() {
@@ -63,8 +65,8 @@ export class AppComponent implements OnInit {
   }
 
   async setToNow(entry: IEntryWithId) {
-    entry.timestamp = new Date();
-    await this.entryService.updateEntry(entry);
+    await this.entryService.updateEntry({ ...entry, timestamp: new Date() });
+    this.entries = await this.entryService.fetchAllEntries();
   }
 
   async deleteEntry(entry: IEntryWithId) {
