@@ -51,12 +51,14 @@ export class AppComponent implements OnInit {
   deferredPrompt: any;
   showButton = false;
   isPersisted = false;
+  persistenceInfo: object;
 
   trackByIdFn = (_, entry: IEntryWithId) => entry.id;
 
   ngOnInit() {
     (async () => { this.entries = await this.entryService.fetchAllEntries(); })();
     (async () => { this.isPersisted = await this.permissionService.isStoragePersisted(); })();
+    (async () => { this.persistenceInfo = await this.permissionService.getStorageInfo(); })();
   }
 
   async addEntry() {
@@ -106,5 +108,6 @@ export class AppComponent implements OnInit {
   async askForPermission() {
     await this.permissionService.persist();
     this.isPersisted = await this.permissionService.isStoragePersisted();
+    this.persistenceInfo = await this.permissionService.getStorageInfo();
   }
 }
