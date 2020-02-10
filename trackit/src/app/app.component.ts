@@ -42,6 +42,8 @@ export class AppComponent implements OnInit {
 
   title = 'TrackIt';
 
+  version = document.lastModified;
+
   form: FormGroup;
 
   entries: IEntry[] = [];

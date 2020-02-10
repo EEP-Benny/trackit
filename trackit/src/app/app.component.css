@@ -6,3 +6,10 @@
   width: 5em;
   margin: auto;
 }
+
+.version {
+  font-size: x-small;
+  margin-left: 1em;
+  height: 24px;
+  opacity: 0.5;
+}

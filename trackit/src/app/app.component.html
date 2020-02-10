@@ -1,6 +1,7 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
     <span>{{title}}</span>
+    <span class="version">{{version}}</span>
     <span style="flex: 1 1 auto;"></span>
     <button *ngIf="!isPersisted" mat-button (click)="askForPermission()">Enable persistent storage</button>
     <button *ngIf="showButton" mat-raised-button color="accent" (click)="addToHomeScreen()">Add to home screen</button>
