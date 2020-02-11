@@ -15,11 +15,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
+import { EntrieslistComponent } from './entry/entrieslist/entrieslist.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    EntrieslistComponent
   ],
   imports: [
     BrowserModule,

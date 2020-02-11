@@ -9,27 +9,6 @@ import { PermissionService } from './services/permission.service';
   selector: 'ti-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: [
-    trigger('items', [
-      transition(':enter', [
-        style({ opacity: 0, height: 0 }),
-        animate('250ms cubic-bezier(0.0, 0.0, 0.2, 1)',
-          style({ opacity: 1, height: '*' }))
-      ]),
-      transition(':leave', [
-        style({ opacity: 1, height: '*' }),
-        animate('150ms cubic-bezier(0.4, 0.0, 1, 1)',
-          style({
-            opacity: 0, height: 0
-          }))
-      ])
-    ]),
-    trigger('list', [
-      transition(':enter', [
-        query('@items', stagger(25, animateChild()))
-      ]),
-    ])
-  ]
 })
 export class AppComponent implements OnInit {
 
@@ -45,18 +24,12 @@ export class AppComponent implements OnInit {
   version = document.lastModified;
 
   form: FormGroup;
-
-  entries: IEntry[] = [];
-
   deferredPrompt: any;
   showButton = false;
   isPersisted = false;
   persistenceInfo: object;
 
-  trackByIdFn = (_, entry: IEntryWithId) => entry.id;
-
   ngOnInit() {
-    (async () => { this.entries = await this.entryService.fetchAllEntries(); })();
     (async () => { this.isPersisted = await this.permissionService.isStoragePersisted(); })();
     (async () => { this.persistenceInfo = await this.permissionService.getStorageInfo(); })();
   }
@@ -64,20 +37,10 @@ export class AppComponent implements OnInit {
   async addEntry() {
     const entry = this.form.value;
     const id = await this.entryService.addEntry(entry);
-    this.entries = [{ id, ...entry }, ...this.entries];
+    // this.entries = [{ id, ...entry }, ...this.entries];
     this.form.reset({ timestamp: new Date() });
   }
 
-  async setToNow(entry: IEntryWithId) {
-    await this.entryService.updateEntry({ ...entry, timestamp: new Date() });
-    this.entries = await this.entryService.fetchAllEntries();
-  }
-
-  async deleteEntry(entry: IEntryWithId) {
-    await this.entryService.deleteEntry(entry);
-    const index = this.entries.findIndex(e => e === entry);
-    this.entries.splice(index, 1);
-  }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
   onbeforeinstallprompt(e) {
