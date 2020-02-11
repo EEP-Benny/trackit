@@ -24,7 +24,13 @@ import { trigger, transition, style, animate, query, stagger, animateChild } fro
     ]),
     trigger('list', [
       transition(':enter', [
-        query('@items', stagger(25, animateChild()))
+        query('@items', [
+          style({ opacity: 0, transform: 'translateY(25px)' }),
+          stagger(25, [
+            animate('350ms cubic-bezier(0.0, 0.0, 0.2, 1)',
+              style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
       ]),
     ])
   ]
