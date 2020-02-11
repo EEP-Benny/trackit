@@ -6,7 +6,7 @@ import { trigger, transition, style, animate, query, stagger, animateChild } fro
 import { PermissionService } from './services/permission.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'ti-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   animations: [
