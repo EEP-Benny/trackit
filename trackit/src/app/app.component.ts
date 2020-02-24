@@ -1,8 +1,4 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { IEntry, IEntryWithId } from './interfaces/IEntry';
-import { EntryService } from './services/entry.service';
-import { trigger, transition, style, animate, query, stagger, animateChild } from '@angular/animations';
 import { PermissionService } from './services/permission.service';
 
 @Component({
@@ -12,18 +8,12 @@ import { PermissionService } from './services/permission.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private readonly entryService: EntryService, private readonly permissionService: PermissionService, ) {
-    this.form = new FormGroup({
-      value: new FormControl('', Validators.required),
-      timestamp: new FormControl(new Date()),
-    });
-  }
+  constructor(private readonly permissionService: PermissionService) { }
 
   title = 'TrackIt';
 
   version = document.lastModified;
 
-  form: FormGroup;
   deferredPrompt: any;
   showButton = false;
   isPersisted = false;
@@ -33,14 +23,6 @@ export class AppComponent implements OnInit {
     (async () => { this.isPersisted = await this.permissionService.isStoragePersisted(); })();
     (async () => { this.persistenceInfo = await this.permissionService.getStorageInfo(); })();
   }
-
-  async addEntry() {
-    const entry = this.form.value;
-    const id = await this.entryService.addEntry(entry);
-    // this.entries = [{ id, ...entry }, ...this.entries];
-    this.form.reset({ timestamp: new Date() });
-  }
-
 
   @HostListener('window:beforeinstallprompt', ['$event'])
   onbeforeinstallprompt(e) {
