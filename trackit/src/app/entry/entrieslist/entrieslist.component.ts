@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IEntry, IEntryWithId } from 'src/app/interfaces/IEntry';
 import { EntryService } from 'src/app/services/entry.service';
 import { trigger, transition, style, animate, query, stagger, animateChild } from '@angular/animations';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ti-entrieslist',
@@ -38,24 +39,21 @@ import { trigger, transition, style, animate, query, stagger, animateChild } fro
 export class EntrieslistComponent implements OnInit {
 
 
-  entries: IEntry[] = [];
+  entries$: Observable<IEntry[]>;
 
   trackByIdFn = (_: number, entry: IEntryWithId) => entry.id;
 
   constructor(private readonly entryService: EntryService, ) { }
 
   ngOnInit() {
-    (async () => { this.entries = await this.entryService.fetchAllEntries(); })();
+    this.entries$ = this.entryService.getAllEntries();
   }
 
-  async setToNow(entry: IEntryWithId) {
-    await this.entryService.updateEntry({ ...entry, timestamp: new Date() });
-    this.entries = await this.entryService.fetchAllEntries();
+  setToNow(entry: IEntryWithId) {
+    this.entryService.updateEntry({ ...entry, timestamp: new Date() });
   }
 
-  async deleteEntry(entry: IEntryWithId) {
-    await this.entryService.deleteEntry(entry);
-    const index = this.entries.findIndex(e => e === entry);
-    this.entries.splice(index, 1);
+  deleteEntry(entry: IEntryWithId) {
+    this.entryService.deleteEntry(entry);
   }
 }

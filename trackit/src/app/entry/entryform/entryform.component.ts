@@ -22,7 +22,7 @@ export class EntryformComponent implements OnInit {
 
   async addEntry() {
     const entry = this.form.value;
-    const id = await this.entryService.addEntry(entry);
+    await this.entryService.addEntry(entry);
     this.form.reset({ timestamp: new Date() });
   }
 
