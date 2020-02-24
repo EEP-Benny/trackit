@@ -1,7 +1,7 @@
 <ng-container *ngIf="entries$ | async as entries">
   <mat-list @list *ngIf="entries.length > 0">
     <mat-list-item @items *ngFor="let entry of entries; trackBy: trackByIdFn">
-      <p class="time">{{entry.timestamp}}</p>
+      <p class="time">{{entry.timestamp | date:'medium'}}</p>
       <p class="value">{{entry.value}}</p>
       <button mat-stroked-button color="primary" (click)="setToNow(entry)">Set to now</button>
       <button mat-icon-button color="warn" (click)="deleteEntry(entry)" aria-label="Delete entry">
