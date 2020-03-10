@@ -1,14 +1,43 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>{{title}}</span>
-    <span class="version">{{version}}</span>
+    <button *ngIf="isMobile" mat-icon-button (click)="sidenav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>{{ title }}</span>
     <span style="flex: 1 1 auto;"></span>
-    <button *ngIf="!isPersisted" mat-button (click)="askForPermission()">Enable persistent storage</button>
-    <button *ngIf="showButton" mat-raised-button color="accent" (click)="addToHomeScreen()">Add to home screen</button>
+    <button *ngIf="!isPersisted" mat-button (click)="askForPermission()">
+      Enable persistent storage
+    </button>
+    <button
+      *ngIf="showButton"
+      mat-raised-button
+      color="accent"
+      (click)="addToHomeScreen()"
+    >
+      Add to home screen
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>
-<main>
-  <ti-entryform></ti-entryform>
-  <ti-entrieslist></ti-entrieslist>
-  <pre (click)="askForPermission()">{{persistenceInfo | json}}</pre>
-</main>
+<mat-sidenav-container>
+  <mat-sidenav
+    #sidenav
+    role="navigation"
+    [opened]="!isMobile"
+    [mode]="isMobile ? 'push' : 'side'"
+  >
+    <mat-nav-list>
+      <a mat-list-item href="#">
+        <mat-icon>home</mat-icon> <span class="nav-caption">Home</span>
+      </a>
+    </mat-nav-list>
+    <hr />
+    <pre (click)="askForPermission()">{{ persistenceInfo | json }}</pre>
+    <span class="version">{{ version }}</span>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <main>
+      <ti-entryform></ti-entryform>
+      <ti-entrieslist></ti-entrieslist>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

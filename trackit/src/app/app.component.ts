@@ -7,12 +7,13 @@ import { PermissionService } from './services/permission.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-
-  constructor(private readonly permissionService: PermissionService) { }
+  constructor(private readonly permissionService: PermissionService) {}
 
   title = 'TrackIt';
 
   version = document.lastModified;
+
+  isMobile = false;
 
   deferredPrompt: any;
   showButton = false;
@@ -20,8 +21,17 @@ export class AppComponent implements OnInit {
   persistenceInfo: object;
 
   ngOnInit() {
-    (async () => { this.isPersisted = await this.permissionService.isStoragePersisted(); })();
-    (async () => { this.persistenceInfo = await this.permissionService.getStorageInfo(); })();
+    (async () => {
+      this.isPersisted = await this.permissionService.isStoragePersisted();
+    })();
+    (async () => {
+      this.persistenceInfo = await this.permissionService.getStorageInfo();
+    })();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.isMobile = event.target.innerWidth < 800;
   }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
@@ -40,7 +50,7 @@ export class AppComponent implements OnInit {
     // Show the prompt
     this.deferredPrompt.prompt();
     // Wait for the user to respond to the prompt
-    this.deferredPrompt.userChoice.then((choiceResult: { outcome: string; }) => {
+    this.deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
       if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the A2HS prompt');
       } else {
