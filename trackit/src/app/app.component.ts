@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { PermissionService } from './services/permission.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'ti-root',
@@ -7,7 +8,10 @@ import { PermissionService } from './services/permission.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  constructor(private readonly permissionService: PermissionService) {}
+  constructor(
+    private permissionService: PermissionService,
+    private breakpointObserver: BreakpointObserver
+  ) {}
 
   title = 'TrackIt';
 
@@ -21,17 +25,16 @@ export class AppComponent implements OnInit {
   persistenceInfo: object;
 
   ngOnInit() {
+    this.breakpointObserver.observe('(max-width: 800px)').subscribe(state => {
+      this.isMobile = state.matches;
+    });
+
     (async () => {
       this.isPersisted = await this.permissionService.isStoragePersisted();
     })();
     (async () => {
       this.persistenceInfo = await this.permissionService.getStorageInfo();
     })();
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.isMobile = event.target.innerWidth < 800;
   }
 
   @HostListener('window:beforeinstallprompt', ['$event'])
