@@ -32,8 +32,12 @@
   >
     <div class="sidenav">
       <mat-nav-list>
-        <a mat-list-item href="#">
-          <mat-icon>home</mat-icon> <span class="nav-caption">Home</span>
+        <a mat-list-item routerLink="entries" routerLinkActive="active">
+          <mat-icon>list</mat-icon> <span class="nav-caption">Entries</span>
+        </a>
+        <a mat-list-item routerLink="import-export" routerLinkActive="active">
+          <mat-icon>import_export</mat-icon>
+          <span class="nav-caption">Import/Export</span>
         </a>
       </mat-nav-list>
       <div class="sidenav-bottom">
@@ -44,8 +48,7 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <main>
-      <ti-entryform></ti-entryform>
-      <ti-entrieslist></ti-entrieslist>
+      <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

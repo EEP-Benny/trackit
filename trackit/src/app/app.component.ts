@@ -5,7 +5,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'ti-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   constructor(
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   persistenceInfo: object;
 
   ngOnInit() {
-    this.breakpointObserver.observe('(max-width: 800px)').subscribe(state => {
+    this.breakpointObserver.observe('(max-width: 800px)').subscribe((state) => {
       this.isMobile = state.matches;
     });
 
