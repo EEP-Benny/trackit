@@ -8,7 +8,7 @@
     >
       <mat-icon>menu</mat-icon>
     </button>
-    <span>{{ title }}</span>
+    <span class="app-title">{{ title }}</span>
     <span style="flex: 1 1 auto;"></span>
     <button *ngIf="!isPersisted" mat-button (click)="askForPermission()">
       Enable persistent storage
