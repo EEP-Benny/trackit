@@ -1,1 +1,14 @@
-<p>import-export-page works!</p>
+<h1>Export</h1>
+<button mat-raised-button color="primary" (click)="generateExport()">
+  Generate Export
+</button>
+<p *ngIf="exportData">
+  {{ exportData.entries.length }} entries collected.
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="downloadExport(exportData)"
+  >
+    Download
+  </button>
+</p>

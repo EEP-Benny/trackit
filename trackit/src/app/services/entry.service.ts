@@ -43,6 +43,6 @@ export class EntryService {
 
   getAllEntries(): Observable<IEntry[]> {
     this.fetchEntriesFromDb();
-    return this.entriesEmitter;
+    return this.entriesEmitter.asObservable();
   }
 }
