@@ -19,5 +19,43 @@
       </button>
     </p>
   </mat-tab>
-  <mat-tab label="Import"></mat-tab>
+  <mat-tab label="Import">
+    <div (click)="fileInput.click()">
+      {{ importData?.filename || 'Choose a file' }}
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
+        Browse File
+      </button>
+    </div>
+    <input
+      #fileInput
+      type="file"
+      hidden
+      accept=".csv,text/csv"
+      (change)="uploadFile($event.target.files[0])"
+    />
+    <div *ngIf="importData?.entries as entries">
+      This file contains {{ entries.length }} entries.
+      <div>
+        <mat-radio-group>
+          <mat-radio-button value="overwrite" #overwrite>
+            Overwrite all existing entries
+          </mat-radio-button>
+          <mat-radio-button value="append" checked>
+            Append to existing entries
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <button
+        mat-raised-button
+        [color]="overwrite.checked ? 'warn' : 'primary'"
+        (click)="import(overwrite.checked)"
+      >
+        Import
+      </button>
+    </div>
+
+    <ng-template #importSuccessSnackBar>
+      {{ importData.entries.length }} entries imported.
+    </ng-template>
+  </mat-tab>
 </mat-tab-group>
