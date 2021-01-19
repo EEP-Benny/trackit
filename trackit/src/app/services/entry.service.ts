@@ -21,7 +21,6 @@ export class EntryService {
   }
 
   async addEntry(entry: IEntry) {
-    entry.timestamp = new Date();
     const id = await this.dexieService.entries.add(entry);
     this.entries.unshift(entry);
     this.entriesEmitter.next(this.entries);

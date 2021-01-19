@@ -14,14 +14,18 @@ export class EntryformComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      value: new FormControl('', Validators.required),
-      timestamp: new FormControl(new Date()),
+      value: new FormControl(''),
     });
   }
 
   async addEntry() {
-    const entry = this.form.value;
-    await this.entryService.addEntry(entry);
-    this.form.reset({ timestamp: new Date() });
+    const inputValue: string = this.form.value.value;
+    if (inputValue) {
+      this.form.reset();
+      await this.entryService.addEntry({
+        value: +inputValue,
+        timestamp: new Date(),
+      });
+    }
   }
 }
