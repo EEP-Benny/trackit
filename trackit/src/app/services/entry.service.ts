@@ -4,17 +4,19 @@ import { DexieService } from './dexie.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EntryService {
-
   private entries: IEntry[] = [];
   private entriesEmitter = new BehaviorSubject<IEntry[]>(this.entries);
 
-  constructor(private dexieService: DexieService) { }
+  constructor(private dexieService: DexieService) {}
 
   async fetchEntriesFromDb() {
-    this.entries = await this.dexieService.entries.orderBy('timestamp').reverse().toArray();
+    this.entries = await this.dexieService.entries
+      .orderBy('timestamp')
+      .reverse()
+      .toArray();
     this.entriesEmitter.next(this.entries);
   }
 
@@ -34,7 +36,7 @@ export class EntryService {
 
   async deleteEntry(entry: IEntryWithId) {
     await this.dexieService.entries.delete(entry.id);
-    const index = this.entries.findIndex(e => e === entry);
+    const index = this.entries.findIndex((e) => e === entry);
     this.entries.splice(index, 1);
     this.entriesEmitter.next(this.entries);
   }
@@ -44,5 +46,3 @@ export class EntryService {
     return this.entriesEmitter;
   }
 }
-
-

@@ -6,12 +6,13 @@ describe('EntryformComponent', () => {
   let component: EntryformComponent;
   let fixture: ComponentFixture<EntryformComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EntryformComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EntryformComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EntryformComponent);

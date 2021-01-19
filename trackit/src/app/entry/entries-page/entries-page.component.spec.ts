@@ -6,12 +6,13 @@ describe('EntriesPageComponent', () => {
   let component: EntriesPageComponent;
   let fixture: ComponentFixture<EntriesPageComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EntriesPageComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EntriesPageComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EntriesPageComponent);

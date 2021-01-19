@@ -6,12 +6,13 @@ describe('ImportExportPageComponent', () => {
   let component: ImportExportPageComponent;
   let fixture: ComponentFixture<ImportExportPageComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ImportExportPageComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ImportExportPageComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ImportExportPageComponent);

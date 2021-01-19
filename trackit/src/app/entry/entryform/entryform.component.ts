@@ -5,11 +5,10 @@ import { EntryService } from 'src/app/services/entry.service';
 @Component({
   selector: 'ti-entryform',
   templateUrl: './entryform.component.html',
-  styleUrls: ['./entryform.component.css']
+  styleUrls: ['./entryform.component.css'],
 })
 export class EntryformComponent implements OnInit {
-
-  constructor(private readonly entryService: EntryService) { }
+  constructor(private readonly entryService: EntryService) {}
 
   form: FormGroup;
 
@@ -25,7 +24,4 @@ export class EntryformComponent implements OnInit {
     await this.entryService.addEntry(entry);
     this.form.reset({ timestamp: new Date() });
   }
-
-
-
 }

@@ -3,7 +3,7 @@ import Dexie from 'dexie';
 import { IEntry } from '../interfaces/IEntry';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DexieService extends Dexie {
   entries: Dexie.Table<IEntry, number>;
@@ -23,4 +23,3 @@ export class DexieService extends Dexie {
     this.entries = this.table('entries');
   }
 }
-
