@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImportExportPageComponent } from './import-export-page.component';
 
@@ -6,7 +6,7 @@ describe('ImportExportPageComponent', () => {
   let component: ImportExportPageComponent;
   let fixture: ComponentFixture<ImportExportPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ImportExportPageComponent ]
     })
