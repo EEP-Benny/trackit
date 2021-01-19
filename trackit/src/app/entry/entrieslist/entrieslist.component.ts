@@ -48,7 +48,7 @@ import { Observable } from 'rxjs';
               ),
             ]),
           ],
-          { optional: true }
+          { optional: true, limit: 20 }
         ),
       ]),
     ]),
