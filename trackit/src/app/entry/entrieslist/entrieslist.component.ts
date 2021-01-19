@@ -8,7 +8,6 @@ import {
   animate,
   query,
   stagger,
-  animateChild,
 } from '@angular/animations';
 import { Observable } from 'rxjs';
 
@@ -58,9 +57,9 @@ import { Observable } from 'rxjs';
 export class EntrieslistComponent implements OnInit {
   entries$: Observable<IEntry[]>;
 
-  trackByIdFn = (_: number, entry: IEntryWithId) => entry.id;
-
   constructor(private readonly entryService: EntryService) {}
+
+  trackByIdFn = (_: number, entry: IEntryWithId) => entry.id;
 
   ngOnInit() {
     this.entries$ = this.entryService.getAllEntries();

@@ -1,38 +1,28 @@
 import { Injectable } from '@angular/core';
 
+export type PermissionInfo = {
+  storagePersisted: boolean;
+  quota: StorageEstimate;
+  permission: PermissionState;
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class PermissionService {
   async isStoragePersisted() {
-    return (
-      (await navigator.storage) &&
-      navigator.storage.persisted &&
-      navigator.storage.persisted()
-    );
+    return await navigator.storage?.persisted?.();
   }
 
   async persist() {
-    return (
-      (await navigator.storage) &&
-      navigator.storage.persist &&
-      navigator.storage.persist()
-    );
+    return await navigator.storage?.persist?.();
   }
 
-  async getStorageInfo() {
+  async getStorageInfo(): Promise<PermissionInfo> {
     const [storagePersisted, quota, permission] = await Promise.all([
-      navigator.storage &&
-        navigator.storage.persisted &&
-        navigator.storage.persisted(),
-      navigator.storage &&
-        navigator.storage.estimate &&
-        navigator.storage.estimate(),
-      navigator.permissions &&
-        navigator.permissions.query &&
-        navigator.permissions.query({
-          name: 'persistent-storage',
-        }),
+      navigator.storage?.persisted?.(),
+      navigator.storage?.estimate?.(),
+      navigator.permissions?.query?.({ name: 'persistent-storage' }),
     ]);
     return { storagePersisted, quota, permission: permission.state };
   }

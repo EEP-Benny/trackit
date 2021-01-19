@@ -1,6 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { PermissionService } from './services/permission.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import {
+  PermissionService,
+  PermissionInfo,
+} from './services/permission.service';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'ti-root',
@@ -8,11 +11,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private permissionService: PermissionService,
-    private breakpointObserver: BreakpointObserver
-  ) {}
-
   title = 'TrackIt';
 
   version = document.lastModified;
@@ -22,7 +20,22 @@ export class AppComponent implements OnInit {
   deferredPrompt: any;
   showButton = false;
   isPersisted = false;
-  persistenceInfo: object;
+  persistenceInfo: PermissionInfo;
+
+  constructor(
+    private permissionService: PermissionService,
+    private breakpointObserver: BreakpointObserver
+  ) {}
+
+  @HostListener('window:beforeinstallprompt', ['$event'])
+  onbeforeinstallprompt(e) {
+    console.log(e);
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    this.deferredPrompt = e;
+    this.showButton = true;
+  }
 
   ngOnInit() {
     this.breakpointObserver.observe('(max-width: 800px)').subscribe((state) => {
@@ -35,16 +48,6 @@ export class AppComponent implements OnInit {
     (async () => {
       this.persistenceInfo = await this.permissionService.getStorageInfo();
     })();
-  }
-
-  @HostListener('window:beforeinstallprompt', ['$event'])
-  onbeforeinstallprompt(e) {
-    console.log(e);
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
-    e.preventDefault();
-    // Stash the event so it can be triggered later.
-    this.deferredPrompt = e;
-    this.showButton = true;
   }
 
   addToHomeScreen() {

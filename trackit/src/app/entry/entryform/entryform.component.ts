@@ -8,9 +8,9 @@ import { EntryService } from 'src/app/services/entry.service';
   styleUrls: ['./entryform.component.css'],
 })
 export class EntryformComponent implements OnInit {
-  constructor(private readonly entryService: EntryService) {}
-
   form: FormGroup;
+
+  constructor(private readonly entryService: EntryService) {}
 
   ngOnInit() {
     this.form = new FormGroup({
