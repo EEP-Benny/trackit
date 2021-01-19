@@ -5,9 +5,14 @@
 <p *ngIf="exportData">
   {{ exportData.entries.length }} entries collected.
   <button
+    *ngIf="
+      'TrackIt_Export_' +
+      (exportData.date | date: 'yyyy-MM-dd_HH-mm-ss') +
+      '.csv' as filename
+    "
     mat-raised-button
     color="primary"
-    (click)="downloadExport(exportData)"
+    (click)="downloadExport(exportData, filename)"
   >
     Download
   </button>
