@@ -1,12 +1,18 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MatDialog, MatDialogState } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IEntry } from '../interfaces/IEntry';
-import { saveAs } from 'file-saver';
 import { csvFormat, csvParseRows } from 'd3-dsv';
 import { DexieService } from '../services/dexie.service';
 import { EntryService } from '../services/entry.service';
 
-type ExportData = { entries: IEntry[]; date: Date };
+type ExportInfo = {
+  date: Date;
+  entryCount: number;
+  fileSize: number;
+  blobUrl: SafeUrl;
+};
 type ImportData = { entries: IEntry[]; filename: string };
 
 @Component({
@@ -15,32 +21,52 @@ type ImportData = { entries: IEntry[]; filename: string };
   styleUrls: ['./import-export-page.component.css'],
 })
 export class ImportExportPageComponent implements OnInit {
+  @ViewChild('exportDialog')
+  exportDialogTemplate: TemplateRef<any>;
+
   @ViewChild('importSuccessSnackBar')
   importSuccessSnackBarTemplate: TemplateRef<any>;
 
-  exportData: ExportData;
+  exportInfo: ExportInfo = null;
 
   importData: ImportData;
 
   constructor(
     private readonly dexieService: DexieService,
     private readonly entryService: EntryService,
+    private sanitizer: DomSanitizer,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {}
 
   async generateExport() {
-    this.exportData = {
-      entries: await this.dexieService.entries.orderBy('timestamp').toArray(),
-      date: new Date(),
-    };
-  }
+    const dialog = this.dialog.open(this.exportDialogTemplate, {
+      width: '400px',
+    });
 
-  downloadExport(exportData: ExportData, filename: string) {
-    const csvContent = csvFormat(exportData.entries, ['timestamp', 'value']);
+    const entries = await this.dexieService.entries
+      .orderBy('timestamp')
+      .toArray();
+    const csvContent = csvFormat(entries, ['timestamp', 'value']);
     const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-    saveAs(csvBlob, filename);
+    const url = URL.createObjectURL(csvBlob);
+    this.exportInfo = {
+      date: new Date(),
+      entryCount: entries.length,
+      fileSize: csvBlob.size,
+      blobUrl: this.sanitizer.bypassSecurityTrustUrl(url),
+    };
+    const onClose = () => {
+      URL.revokeObjectURL(url);
+      this.exportInfo = null;
+    };
+    if (dialog.getState() === MatDialogState.OPEN) {
+      dialog.afterClosed().subscribe(onClose);
+    } else {
+      onClose();
+    }
   }
 
   async uploadFile(file?: File) {

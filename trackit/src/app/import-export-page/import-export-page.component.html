@@ -3,21 +3,46 @@
     <button mat-raised-button color="primary" (click)="generateExport()">
       Generate Export
     </button>
-    <p *ngIf="exportData">
-      {{ exportData.entries.length }} entries collected.
-      <button
-        *ngIf="
-          'TrackIt_Export_' +
-          (exportData.date | date: 'yyyy-MM-dd_HH-mm-ss') +
-          '.csv' as filename
-        "
-        mat-raised-button
-        color="primary"
-        (click)="downloadExport(exportData, filename)"
-      >
-        Download
-      </button>
-    </p>
+    <ng-template #exportDialog>
+      <h2 mat-dialog-title>Export entries</h2>
+      <mat-dialog-content *ngIf="exportInfo; else spinner">
+        Your export is ready to download.
+        <mat-list>
+          <mat-list-item>
+            <mat-icon matListIcon>list</mat-icon>
+            <p matLine>{{ exportInfo.entryCount }} entries</p>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListIcon>donut_large</mat-icon>
+            <p matLine>
+              {{ exportInfo.fileSize | filesize: { fullform: true, round: 1 } }}
+            </p>
+          </mat-list-item>
+        </mat-list>
+      </mat-dialog-content>
+      <ng-template #spinner>
+        <mat-dialog-content class="spinner-container">
+          <mat-spinner diameter="48"></mat-spinner>
+          <p>Generating export...</p>
+        </mat-dialog-content>
+      </ng-template>
+      <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close color="primary">Cancel</button>
+        <a
+          mat-button
+          mat-dialog-close
+          color="primary"
+          cdkFocusInitial
+          [disabled]="!exportInfo"
+          [href]="exportInfo?.blobUrl"
+          download="TrackIt_Export_{{
+            exportInfo?.date | date: 'yyyy-MM-dd_HH-mm-ss'
+          }}.csv"
+        >
+          Download
+        </a>
+      </mat-dialog-actions>
+    </ng-template>
   </mat-tab>
   <mat-tab label="Import">
     <div (click)="fileInput.click()">
