@@ -12,8 +12,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const modules = [
   MatButtonModule,
@@ -28,8 +28,8 @@ const modules = [
   MatRadioModule,
   MatSidenavModule,
   MatSnackBarModule,
-  MatTabsModule,
   MatToolbarModule,
+  MatTooltipModule,
 ];
 @NgModule({
   declarations: [],

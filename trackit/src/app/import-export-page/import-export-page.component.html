@@ -1,86 +1,107 @@
-<mat-tab-group mat-align-tabs="center">
-  <mat-tab label="Export">
+<div class="container-with-spacing">
+  <h2>Export</h2>
+  <p>
+    Here you can export all your entries as a
+    <abbr matTooltip='CSV stands for "comma-separated values"'>CSV</abbr> file.
+    You can use this file...
+  </p>
+  <ul>
+    <li>as a backup</li>
+    <li>to import your data to another device</li>
+    <li>in a spreadsheet application like Excel to view or edit your data</li>
+  </ul>
+  <p>
     <button mat-raised-button color="primary" (click)="generateExport()">
       Generate Export
     </button>
-    <ng-template #exportDialog>
-      <h2 mat-dialog-title>Export entries</h2>
-      <mat-dialog-content *ngIf="exportInfo; else spinner">
-        Your export is ready to download.
-        <mat-list>
-          <mat-list-item>
-            <mat-icon matListIcon>list</mat-icon>
-            <p matLine>{{ exportInfo.entryCount }} entries</p>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon matListIcon>donut_large</mat-icon>
-            <p matLine>
-              {{ exportInfo.fileSize | filesize: { fullform: true, round: 1 } }}
-            </p>
-          </mat-list-item>
-        </mat-list>
-      </mat-dialog-content>
-      <ng-template #spinner>
-        <mat-dialog-content class="spinner-container">
-          <mat-spinner diameter="48"></mat-spinner>
-          <p>Generating export...</p>
-        </mat-dialog-content>
-      </ng-template>
-      <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close color="primary">Cancel</button>
-        <a
-          mat-button
-          mat-dialog-close
-          color="primary"
-          cdkFocusInitial
-          [disabled]="!exportInfo"
-          [href]="exportInfo?.blobUrl"
-          download="TrackIt_Export_{{
-            exportInfo?.date | date: 'yyyy-MM-dd_HH-mm-ss'
-          }}.csv"
-        >
-          Download
-        </a>
-      </mat-dialog-actions>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Import">
-    <div (click)="fileInput.click()">
-      {{ importData?.filename || 'Choose a file' }}
-      <button mat-raised-button color="primary" (click)="fileInput.click()">
-        Browse File
-      </button>
-    </div>
-    <input
-      #fileInput
-      type="file"
-      hidden
-      accept=".csv,text/csv"
-      (change)="uploadFile($event.target.files[0])"
-    />
-    <div *ngIf="importData?.entries as entries">
-      This file contains {{ entries.length }} entries.
-      <div>
-        <mat-radio-group>
-          <mat-radio-button value="overwrite" #overwrite>
-            Overwrite all existing entries
-          </mat-radio-button>
-          <mat-radio-button value="append" checked>
-            Append to existing entries
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <button
-        mat-raised-button
-        [color]="overwrite.checked ? 'warn' : 'primary'"
-        (click)="import(overwrite.checked)"
-      >
-        Import
-      </button>
-    </div>
+  </p>
 
-    <ng-template #importSuccessSnackBar>
-      {{ importData.entries.length }} entries imported.
+  <ng-template #exportDialog>
+    <h2 mat-dialog-title>Export entries</h2>
+    <mat-dialog-content *ngIf="exportInfo; else spinner">
+      Your export is ready to download.
+      <mat-list>
+        <mat-list-item>
+          <mat-icon matListIcon>list</mat-icon>
+          <p matLine>{{ exportInfo.entryCount }} entries</p>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon matListIcon>donut_large</mat-icon>
+          <p matLine>
+            {{ exportInfo.fileSize | filesize: { fullform: true, round: 1 } }}
+          </p>
+        </mat-list-item>
+      </mat-list>
+    </mat-dialog-content>
+    <ng-template #spinner>
+      <mat-dialog-content class="spinner-container">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Generating export...</p>
+      </mat-dialog-content>
     </ng-template>
-  </mat-tab>
-</mat-tab-group>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close color="primary">Cancel</button>
+      <a
+        mat-button
+        mat-dialog-close
+        color="primary"
+        cdkFocusInitial
+        [disabled]="!exportInfo"
+        [href]="exportInfo?.blobUrl"
+        download="TrackIt_Export_{{
+          exportInfo?.date | date: 'yyyy-MM-dd_HH-mm-ss'
+        }}.csv"
+      >
+        Download
+      </a>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <h2>Import</h2>
+  <p>
+    Here you can import a
+    <abbr matTooltip='CSV stands for "comma-separated values"'>CSV</abbr> file
+    that was exported from TrackIt.
+  </p>
+  <p>
+    You can also import data from another source. In this case, make sure that
+    the CSV file contains two columns named <code>timestamp</code> and
+    <code>value</code>.
+  </p>
+  <p>
+    <button mat-raised-button color="primary" (click)="fileInput.click()">
+      Choose File
+    </button>
+  </p>
+  <input
+    #fileInput
+    type="file"
+    hidden
+    accept=".csv,text/csv"
+    (change)="uploadFile($event.target.files[0])"
+  />
+  <div *ngIf="importData?.entries as entries">
+    This file contains {{ entries.length }} entries.
+    <div>
+      <mat-radio-group>
+        <mat-radio-button value="overwrite" #overwrite>
+          Overwrite all existing entries
+        </mat-radio-button>
+        <mat-radio-button value="append" checked>
+          Append to existing entries
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <button
+      mat-raised-button
+      [color]="overwrite.checked ? 'warn' : 'primary'"
+      (click)="import(overwrite.checked)"
+    >
+      Import
+    </button>
+  </div>
+
+  <ng-template #importSuccessSnackBar>
+    {{ importData.entries.length }} entries imported.
+  </ng-template>
+</div>
