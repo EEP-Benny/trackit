@@ -44,4 +44,17 @@ export class EntryService {
     this.fetchEntriesFromDb();
     return this.entriesEmitter.asObservable();
   }
+
+  async getAllEntriesForExport() {
+    return await this.dexieService.entries.orderBy('timestamp').toArray();
+  }
+
+  async clearAllEntries() {
+    await this.dexieService.entries.clear();
+  }
+
+  async importEntries(entries: IEntry[]) {
+    await this.dexieService.entries.bulkAdd(entries);
+    this.fetchEntriesFromDb();
+  }
 }

@@ -4,7 +4,6 @@ import { MatDialog, MatDialogState } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IEntry } from '../interfaces/IEntry';
 import { csvFormat, csvParseRows } from 'd3-dsv';
-import { DexieService } from '../services/dexie.service';
 import { EntryService } from '../services/entry.service';
 
 type ExportInfo = {
@@ -32,7 +31,6 @@ export class ImportExportPageComponent implements OnInit {
   importData: ImportData;
 
   constructor(
-    private readonly dexieService: DexieService,
     private readonly entryService: EntryService,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
@@ -46,9 +44,7 @@ export class ImportExportPageComponent implements OnInit {
       width: '400px',
     });
 
-    const entries = await this.dexieService.entries
-      .orderBy('timestamp')
-      .toArray();
+    const entries = await this.entryService.getAllEntriesForExport();
     const csvContent = csvFormat(entries, ['timestamp', 'value']);
     const csvBlob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(csvBlob);
@@ -100,10 +96,9 @@ export class ImportExportPageComponent implements OnInit {
   async import(overwrite: boolean) {
     if (overwrite) {
       // TODO: Add confirmation dialog
-      await this.dexieService.entries.clear();
+      await this.entryService.clearAllEntries();
     }
-    await this.dexieService.entries.bulkAdd(this.importData.entries);
-    this.entryService.fetchEntriesFromDb();
+    await this.entryService.importEntries(this.importData.entries);
     this.snackBar.openFromTemplate(this.importSuccessSnackBarTemplate, {
       duration: 3000,
     });
