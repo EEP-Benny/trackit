@@ -9,7 +9,7 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { EntriesPageComponent } from './entry/entries-page/entries-page.component';
 import { EntrieslistComponent } from './entry/entrieslist/entrieslist.component';
-import { EntryformComponent } from './entry/entryform/entryform.component';
+import { EntryDialogComponent } from './entry/entry-dialog/entry-dialog.component';
 import { MaterialModule } from './material/material.module';
 import { ImportExportPageComponent } from './import-export-page/import-export-page.component';
 import { SpinnerComponent } from './spinner/spinner.component';
@@ -18,7 +18,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
   declarations: [
     AppComponent,
     EntrieslistComponent,
-    EntryformComponent,
+    EntryDialogComponent,
     EntriesPageComponent,
     ImportExportPageComponent,
     SpinnerComponent,

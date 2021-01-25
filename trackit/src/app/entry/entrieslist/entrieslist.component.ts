@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { IEntry, IEntryWithId } from 'src/app/interfaces/IEntry';
 import { EntryService } from 'src/app/services/entry.service';
+import { EntryDialogComponent } from 'src/app/entry/entry-dialog/entry-dialog.component';
 import {
   trigger,
   transition,
@@ -54,7 +56,10 @@ import { Observable } from 'rxjs';
 export class EntrieslistComponent implements OnInit {
   entries$: Observable<IEntry[]>;
 
-  constructor(private readonly entryService: EntryService) {}
+  constructor(
+    private readonly entryService: EntryService,
+    private readonly dialog: MatDialog
+  ) {}
 
   trackByIdFn = (_: number, entry: IEntryWithId) => entry.id;
 
@@ -64,5 +69,9 @@ export class EntrieslistComponent implements OnInit {
 
   deleteEntry(entry: IEntryWithId) {
     this.entryService.deleteEntry(entry);
+  }
+
+  addEntry() {
+    this.dialog.open(EntryDialogComponent);
   }
 }

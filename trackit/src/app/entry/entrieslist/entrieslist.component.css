@@ -21,6 +21,12 @@ td {
   text-align: right;
 }
 
-button {
+table button {
   margin: -50% 0; /* needed for collapsing animation of table row */
+}
+
+button[mat-fab] {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
 }
