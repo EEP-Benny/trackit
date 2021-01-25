@@ -91,10 +91,19 @@
           <mat-icon matListIcon>insert_drive_file</mat-icon>
           <p matLine>{{ importFilename }}</p>
         </mat-list-item>
-        <mat-list-item *ngIf="importInfo">
-          <mat-icon matListIcon>list</mat-icon>
-          <p matLine>{{ importInfo.entryCount }} entries</p>
-        </mat-list-item>
+        <ng-container *ngIf="importInfo">
+          <mat-list-item>
+            <mat-icon matListIcon>list</mat-icon>
+            <p matLine>{{ importInfo.entryCount }} entries</p>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListIcon>date_range</mat-icon>
+            <p matLine>
+              {{ importInfo.minDate | date }} &ndash;
+              {{ importInfo.maxDate | date }}
+            </p>
+          </mat-list-item>
+        </ng-container>
       </mat-list>
       <ng-container *ngIf="importInfo?.existingEntryCount > 0">
         <p>

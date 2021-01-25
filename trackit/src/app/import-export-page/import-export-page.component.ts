@@ -20,6 +20,8 @@ type ImportInfo = {
   entries: IEntry[];
   entryCount: number;
   existingEntryCount: number;
+  minDate: Date;
+  maxDate: Date;
 };
 
 @Component({
@@ -102,10 +104,22 @@ export class ImportExportPageComponent implements OnInit {
       existingEntryCountPromise,
     ]);
 
+    let minDate = entries[0].timestamp;
+    let maxDate = entries[0].timestamp;
+    entries.forEach((entry) => {
+      if (entry.timestamp < minDate) {
+        minDate = entry.timestamp;
+      } else if (entry.timestamp > maxDate) {
+        maxDate = entry.timestamp;
+      }
+    });
+
     this.importInfo = {
       entries,
       entryCount: entries.length,
       existingEntryCount,
+      minDate,
+      maxDate,
     };
 
     const onClose = () => {
