@@ -12,6 +12,3 @@ mat-list {
   flex-direction: column;
   margin-bottom: 10px; /* without this, the bigger touch target causes an overflow */
 }
-.vertical-radio-group > * + * {
-  margin-top: 1em;
-}

@@ -1,4 +1,4 @@
-<div class="container-with-spacing">
+<div class="with-spacing with-padding">
   <h2>Export</h2>
   <p>
     Here you can export all your entries as a
@@ -18,10 +18,7 @@
 
   <ng-template #exportDialog>
     <h2 mat-dialog-title>Export entries</h2>
-    <mat-dialog-content
-      class="container-with-spacing"
-      *ngIf="exportInfo; else spinner"
-    >
+    <mat-dialog-content class="with-spacing" *ngIf="exportInfo; else spinner">
       <p>Your export is ready to download.</p>
       <mat-list>
         <mat-list-item>
@@ -85,7 +82,7 @@
 
   <ng-template #importDialog>
     <h2 mat-dialog-title>Import entries</h2>
-    <mat-dialog-content class="container-with-spacing">
+    <mat-dialog-content class="with-spacing">
       <mat-list>
         <mat-list-item>
           <mat-icon matListIcon>insert_drive_file</mat-icon>
@@ -105,13 +102,14 @@
           </mat-list-item>
         </ng-container>
       </mat-list>
+      <div class="spacer"></div>
       <ng-container *ngIf="importInfo?.existingEntryCount > 0">
         <p>
           There are already {{ importInfo.existingEntryCount }} entries. What
           should happen to them?
         </p>
         <mat-radio-group
-          class="vertical-radio-group"
+          class="vertical-radio-group with-spacing"
           color="primary"
           [value]="importShouldReplaceEntries ? 'replace' : 'keep'"
           (change)="importShouldReplaceEntries = $event.value === 'replace'"

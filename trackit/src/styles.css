@@ -33,13 +33,16 @@ code {
   border-radius: 4px;
 }
 
-.container-with-spacing {
+.with-padding {
   display: block;
   padding: 1em;
 }
-.container-with-spacing > * {
+.with-spacing > * {
   margin: 0;
 }
-.container-with-spacing > * + * {
+.with-spacing > * + * {
   margin-top: 1em;
+}
+.spacer {
+  display: inline-block; /* prevents margin collapsing */
 }
