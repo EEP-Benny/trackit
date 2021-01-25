@@ -49,6 +49,10 @@ export class EntryService {
     return await this.dexieService.entries.orderBy('timestamp').toArray();
   }
 
+  async countAllEntries() {
+    return await this.dexieService.entries.count();
+  }
+
   async clearAllEntries() {
     await this.dexieService.entries.clear();
   }

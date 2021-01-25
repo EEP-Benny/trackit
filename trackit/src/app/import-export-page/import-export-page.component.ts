@@ -1,6 +1,10 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { MatDialog, MatDialogState } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MatDialogState,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IEntry } from '../interfaces/IEntry';
 import { csvFormat, csvParseRows } from 'd3-dsv';
@@ -12,7 +16,11 @@ type ExportInfo = {
   fileSize: number;
   blobUrl: SafeUrl;
 };
-type ImportData = { entries: IEntry[]; filename: string };
+type ImportInfo = {
+  entries: IEntry[];
+  entryCount: number;
+  existingEntryCount: number;
+};
 
 @Component({
   selector: 'ti-import-export-page',
@@ -23,12 +31,24 @@ export class ImportExportPageComponent implements OnInit {
   @ViewChild('exportDialog')
   exportDialogTemplate: TemplateRef<any>;
 
+  @ViewChild('importDialog')
+  importDialogTemplate: TemplateRef<any>;
+
+  @ViewChild('importConfirmReplaceDialog')
+  importConfirmReplaceDialogTemplate: TemplateRef<any>;
+
   @ViewChild('importSuccessSnackBar')
   importSuccessSnackBarTemplate: TemplateRef<any>;
 
   exportInfo: ExportInfo = null;
 
-  importData: ImportData;
+  importDialogRef: MatDialogRef<unknown, unknown>;
+
+  importFilename: string;
+
+  importInfo: ImportInfo = null;
+
+  importShouldReplaceEntries: boolean;
 
   constructor(
     private readonly entryService: EntryService,
@@ -65,14 +85,37 @@ export class ImportExportPageComponent implements OnInit {
     }
   }
 
-  async uploadFile(file?: File) {
+  async prepareImport(file?: File) {
     if (!file) {
       return;
     }
-    this.importData = {
-      filename: file.name,
-      entries: await this.readEntriesFromFile(file),
+    this.importShouldReplaceEntries = false;
+    this.importFilename = file.name;
+    this.importDialogRef = this.dialog.open(this.importDialogTemplate, {
+      width: '400px',
+    });
+    const entriesPromise = this.readEntriesFromFile(file);
+    const existingEntryCountPromise = this.entryService.countAllEntries();
+
+    const [entries, existingEntryCount] = await Promise.all([
+      entriesPromise,
+      existingEntryCountPromise,
+    ]);
+
+    this.importInfo = {
+      entries,
+      entryCount: entries.length,
+      existingEntryCount,
     };
+
+    const onClose = () => {
+      this.importInfo = null;
+    };
+    if (this.importDialogRef.getState() === MatDialogState.OPEN) {
+      this.importDialogRef.afterClosed().subscribe(onClose);
+    } else {
+      onClose();
+    }
   }
 
   async readEntriesFromFile(file: File) {
@@ -93,14 +136,23 @@ export class ImportExportPageComponent implements OnInit {
     return entries;
   }
 
-  async import(overwrite: boolean) {
-    if (overwrite) {
-      // TODO: Add confirmation dialog
+  async import() {
+    if (this.importShouldReplaceEntries) {
+      const dialog = this.dialog.open(this.importConfirmReplaceDialogTemplate, {
+        maxWidth: 560,
+        data: { existingEntryCount: this.importInfo.existingEntryCount },
+      });
+      const dialogResult = await dialog.afterClosed().toPromise();
+      if (dialogResult !== 'confirm') {
+        return;
+      }
       await this.entryService.clearAllEntries();
     }
-    await this.entryService.importEntries(this.importData.entries);
+    await this.entryService.importEntries(this.importInfo.entries);
+    this.importDialogRef.close();
     this.snackBar.openFromTemplate(this.importSuccessSnackBarTemplate, {
       duration: 3000,
+      data: { entryCount: this.importInfo.entryCount },
     });
   }
 }

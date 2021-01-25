@@ -18,8 +18,11 @@
 
   <ng-template #exportDialog>
     <h2 mat-dialog-title>Export entries</h2>
-    <mat-dialog-content *ngIf="exportInfo; else spinner">
-      Your export is ready to download.
+    <mat-dialog-content
+      class="container-with-spacing"
+      *ngIf="exportInfo; else spinner"
+    >
+      <p>Your export is ready to download.</p>
       <mat-list>
         <mat-list-item>
           <mat-icon matListIcon>list</mat-icon>
@@ -77,30 +80,77 @@
     type="file"
     hidden
     accept=".csv,text/csv"
-    (change)="uploadFile($event.target.files[0])"
+    (change)="prepareImport($event.target.files[0])"
   />
-  <div *ngIf="importData?.entries as entries">
-    This file contains {{ entries.length }} entries.
-    <div>
-      <mat-radio-group>
-        <mat-radio-button value="overwrite" #overwrite>
-          Overwrite all existing entries
-        </mat-radio-button>
-        <mat-radio-button value="append" checked>
-          Append to existing entries
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
-    <button
-      mat-raised-button
-      [color]="overwrite.checked ? 'warn' : 'primary'"
-      (click)="import(overwrite.checked)"
-    >
-      Import
-    </button>
-  </div>
 
-  <ng-template #importSuccessSnackBar>
-    {{ importData.entries.length }} entries imported.
+  <ng-template #importDialog>
+    <h2 mat-dialog-title>Import entries</h2>
+    <mat-dialog-content class="container-with-spacing">
+      <mat-list>
+        <mat-list-item>
+          <mat-icon matListIcon>insert_drive_file</mat-icon>
+          <p matLine>{{ importFilename }}</p>
+        </mat-list-item>
+        <mat-list-item *ngIf="importInfo">
+          <mat-icon matListIcon>list</mat-icon>
+          <p matLine>{{ importInfo.entryCount }} entries</p>
+        </mat-list-item>
+      </mat-list>
+      <ng-container *ngIf="importInfo?.existingEntryCount > 0">
+        <p>
+          There are already {{ importInfo.existingEntryCount }} entries. What
+          should happen to them?
+        </p>
+        <mat-radio-group
+          class="vertical-radio-group"
+          color="primary"
+          [value]="importShouldReplaceEntries ? 'replace' : 'keep'"
+          (change)="importShouldReplaceEntries = $event.value === 'replace'"
+        >
+          <mat-radio-button value="keep">
+            Keep existing entries
+          </mat-radio-button>
+          <mat-radio-button value="replace">
+            Replace existing entries
+          </mat-radio-button>
+        </mat-radio-group>
+      </ng-container>
+      <ti-spinner *ngIf="!importInfo">Analyzing...</ti-spinner>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close color="primary">Cancel</button>
+      <button
+        mat-button
+        color="primary"
+        cdkFocusInitial
+        [disabled]="!importInfo"
+        (click)="import()"
+      >
+        Import
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <ng-template #importConfirmReplaceDialog let-data>
+    <h2 mat-dialog-title>Replace all existing entries?</h2>
+    <mat-dialog-content>
+      All your {{ data.existingEntryCount }} existing entries will be
+      permanently deleted and replaced by the imported entries.
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close color="primary">Cancel</button>
+      <button
+        mat-button
+        mat-dialog-close="confirm"
+        color="primary"
+        cdkFocusInitial
+      >
+        Replace
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <ng-template #importSuccessSnackBar let-data>
+    {{ data.entryCount }} entries imported.
   </ng-template>
 </div>

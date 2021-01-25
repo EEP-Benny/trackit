@@ -1,8 +1,17 @@
 mat-list {
-  margin: 0 -20px;
-  padding-top: 16px;
-  box-sizing: border-box;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-top: 0;
 }
 .mat-list-item.mat-list-item-with-avatar {
   height: 40px;
+}
+
+.vertical-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px; /* without this, the bigger touch target causes an overflow */
+}
+.vertical-radio-group > * + * {
+  margin-top: 1em;
 }
