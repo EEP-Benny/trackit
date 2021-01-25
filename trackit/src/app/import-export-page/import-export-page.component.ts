@@ -48,6 +48,8 @@ export class ImportExportPageComponent implements OnInit {
 
   importFilename: string;
 
+  importError: string;
+
   importInfo: ImportInfo = null;
 
   importShouldReplaceEntries: boolean;
@@ -99,31 +101,36 @@ export class ImportExportPageComponent implements OnInit {
     const entriesPromise = this.readEntriesFromFile(file);
     const existingEntryCountPromise = this.entryService.countAllEntries();
 
-    const [entries, existingEntryCount] = await Promise.all([
-      entriesPromise,
-      existingEntryCountPromise,
-    ]);
+    try {
+      const [entries, existingEntryCount] = await Promise.all([
+        entriesPromise,
+        existingEntryCountPromise,
+      ]);
 
-    let minDate = entries[0].timestamp;
-    let maxDate = entries[0].timestamp;
-    entries.forEach((entry) => {
-      if (entry.timestamp < minDate) {
-        minDate = entry.timestamp;
-      } else if (entry.timestamp > maxDate) {
-        maxDate = entry.timestamp;
-      }
-    });
+      let minDate = entries[0].timestamp;
+      let maxDate = entries[0].timestamp;
+      entries.forEach((entry) => {
+        if (entry.timestamp < minDate) {
+          minDate = entry.timestamp;
+        } else if (entry.timestamp > maxDate) {
+          maxDate = entry.timestamp;
+        }
+      });
 
-    this.importInfo = {
-      entries,
-      entryCount: entries.length,
-      existingEntryCount,
-      minDate,
-      maxDate,
-    };
+      this.importInfo = {
+        entries,
+        entryCount: entries.length,
+        existingEntryCount,
+        minDate,
+        maxDate,
+      };
+    } catch (e) {
+      this.importError = e;
+    }
 
     const onClose = () => {
       this.importInfo = null;
+      this.importError = null;
     };
     if (this.importDialogRef.getState() === MatDialogState.OPEN) {
       this.importDialogRef.afterClosed().subscribe(onClose);
@@ -139,7 +146,7 @@ export class ImportExportPageComponent implements OnInit {
     const timestampIndex = headerRow.indexOf('timestamp');
     const valueIndex = headerRow.indexOf('value');
     if (timestampIndex < 0 || valueIndex < 0) {
-      return; // some columns are missing
+      throw new Error('some columns are missing');
     }
     const entries: IEntry[] = csvRows
       .map((row) => ({

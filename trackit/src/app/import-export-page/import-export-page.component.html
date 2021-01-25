@@ -88,6 +88,10 @@
           <mat-icon matListIcon>insert_drive_file</mat-icon>
           <p matLine>{{ importFilename }}</p>
         </mat-list-item>
+        <mat-list-item *ngIf="importError">
+          <mat-icon matListIcon color="warn">error_outline</mat-icon>
+          <p matLine>Invalid file</p>
+        </mat-list-item>
         <ng-container *ngIf="importInfo">
           <mat-list-item>
             <mat-icon matListIcon>list</mat-icon>
@@ -102,8 +106,8 @@
           </mat-list-item>
         </ng-container>
       </mat-list>
-      <div class="spacer"></div>
       <ng-container *ngIf="importInfo?.existingEntryCount > 0">
+        <div class="spacer"></div>
         <p>
           There are already {{ importInfo.existingEntryCount }} entries. What
           should happen to them?
@@ -122,7 +126,11 @@
           </mat-radio-button>
         </mat-radio-group>
       </ng-container>
-      <ti-spinner *ngIf="!importInfo">Analyzing...</ti-spinner>
+      <p *ngIf="importError">
+        Please select a valid CSV file that contains two columns named
+        <code>timestamp</code> and <code>value</code>.
+      </p>
+      <ti-spinner *ngIf="!importInfo && !importError">Analyzing...</ti-spinner>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close color="primary">Cancel</button>
