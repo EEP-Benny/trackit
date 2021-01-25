@@ -1,7 +1,14 @@
-.time {
-  flex: 0 1 15em;
-  min-width: 0;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
+tr {
+  height: 48px;
+}
+td {
+  padding: 0 16px;
+}
+
 .time span {
   display: inline-block; /* prefers line-breaks between spans */
 }
@@ -9,8 +16,11 @@
 .value {
   font-size: x-large;
   font-weight: bold;
+}
+.align-right {
   text-align: right;
-  padding: 0 1em;
-  margin: auto;
-  flex: 0 1 4em;
+}
+
+button {
+  margin: -50% 0; /* needed for collapsing animation of table row */
 }

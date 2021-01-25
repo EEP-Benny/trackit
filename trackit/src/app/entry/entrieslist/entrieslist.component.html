@@ -1,19 +1,21 @@
 <ng-container *ngIf="entries$ | async as entries">
-  <mat-list @list *ngIf="entries.length > 0">
-    <mat-list-item @items *ngFor="let entry of entries; trackBy: trackByIdFn">
-      <p class="time">
+  <table @list *ngIf="entries.length > 0">
+    <tr @items *ngFor="let entry of entries; trackBy: trackByIdFn">
+      <td class="time">
         <span>{{ entry.timestamp | date: 'mediumDate' }},&nbsp;</span>
         <span>{{ entry.timestamp | date: 'mediumTime' }}</span>
-      </p>
-      <p class="value">{{ entry.value }}</p>
-      <button
-        mat-icon-button
-        color="warn"
-        (click)="deleteEntry(entry)"
-        aria-label="Delete entry"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-list-item>
-  </mat-list>
+      </td>
+      <td class="value align-right">{{ entry.value }}</td>
+      <td class="align-right">
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="deleteEntry(entry)"
+          aria-label="Delete entry"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
 </ng-container>
