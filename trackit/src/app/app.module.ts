@@ -12,6 +12,7 @@ import { EntrieslistComponent } from './entry/entrieslist/entrieslist.component'
 import { EntryformComponent } from './entry/entryform/entryform.component';
 import { MaterialModule } from './material/material.module';
 import { ImportExportPageComponent } from './import-export-page/import-export-page.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ImportExportPageComponent } from './import-export-page/import-export-pa
     EntryformComponent,
     EntriesPageComponent,
     ImportExportPageComponent,
+    SpinnerComponent,
   ],
   imports: [
     AppRoutingModule,
