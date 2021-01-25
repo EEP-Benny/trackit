@@ -65,10 +65,6 @@ export class EntrieslistComponent implements OnInit {
     this.entries$ = this.entryService.getAllEntries();
   }
 
-  setToNow(entry: IEntryWithId) {
-    this.entryService.updateEntry({ ...entry, timestamp: new Date() });
-  }
-
   deleteEntry(entry: IEntryWithId) {
     this.entryService.deleteEntry(entry);
   }
