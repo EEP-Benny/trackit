@@ -13,10 +13,11 @@ export class EntryService {
   constructor(private dexieService: DexieService) {}
 
   async fetchEntriesFromDb() {
+    // it's much cheaper to reverse the array in JS than to lose Dexies performance optimization
     this.entries = await this.dexieService.entries
       .orderBy('timestamp')
-      .reverse()
       .toArray();
+    this.entries.reverse();
     this.entriesEmitter.next(this.entries);
   }
 
@@ -24,6 +25,7 @@ export class EntryService {
     const id = await this.dexieService.entries.add(entry);
     this.entries.unshift(entry);
     this.entriesEmitter.next(this.entries);
+    this.fetchEntriesFromDb();
     return id;
   }
 
