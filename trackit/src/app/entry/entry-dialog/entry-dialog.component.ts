@@ -70,5 +70,5 @@ const getTimeStringFromDate = (d: Date) =>
 
 const setTimeStringToDate = (t: string, d: Date) => {
   const [h, m, s] = t.split(':');
-  d.setHours(+h, +m, +s);
+  d.setHours(+h, +m, +s || 0);
 };
