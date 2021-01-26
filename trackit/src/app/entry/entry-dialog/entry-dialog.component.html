@@ -27,6 +27,13 @@
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
+    <mat-checkbox
+      color="primary"
+      [formControl]="addAnotherControl"
+      class="add-another"
+    >
+      Add another
+    </mat-checkbox>
     <button mat-button mat-dialog-close color="primary">Cancel</button>
     <button mat-button type="submit" color="primary" [disabled]="form.invalid">
       Save

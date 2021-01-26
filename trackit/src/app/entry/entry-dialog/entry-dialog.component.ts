@@ -10,6 +10,7 @@ import { EntryService } from 'src/app/services/entry.service';
 })
 export class EntryDialogComponent implements OnInit {
   form: FormGroup;
+  addAnotherControl: FormControl;
 
   constructor(
     private readonly entryService: EntryService,
@@ -21,11 +22,16 @@ export class EntryDialogComponent implements OnInit {
       value: new FormControl('', Validators.required),
       timestamp: new FormControl(new Date()),
     });
+    this.addAnotherControl = new FormControl(false);
   }
 
   async onSubmit() {
     const formValue = this.form.value;
-    this.dialogRef.close();
+    if (this.addAnotherControl.value) {
+      this.form.reset({ value: '', timestamp: formValue.timestamp });
+    } else {
+      this.dialogRef.close();
+    }
     await this.entryService.addEntry({
       value: +formValue.value,
       timestamp: formValue.timestamp,
