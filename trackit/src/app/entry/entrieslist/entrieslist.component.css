@@ -16,8 +16,10 @@ td {
 .value {
   font-size: x-large;
   font-weight: bold;
+  text-align: right;
 }
-.align-right {
+.actions {
+  white-space: nowrap;
   text-align: right;
 }
 
