@@ -15,5 +15,6 @@ mat-dialog-content {
 }
 
 .add-another {
-  margin-right: 2em;
+  margin-right: auto;
+  padding-right: 2em;
 }
