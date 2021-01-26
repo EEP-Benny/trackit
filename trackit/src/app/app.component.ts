@@ -1,9 +1,11 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
   PermissionService,
   PermissionInfo,
 } from './services/permission.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { NavigationEnd, Router } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'ti-root',
@@ -11,6 +13,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  @ViewChild('sideNav') sideNav: MatSidenav;
+
   title = 'TrackIt';
 
   version = document.lastModified;
@@ -24,7 +28,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private permissionService: PermissionService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private router: Router
   ) {}
 
   @HostListener('window:beforeinstallprompt', ['$event'])
@@ -40,6 +45,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.breakpointObserver.observe('(max-width: 800px)').subscribe((state) => {
       this.isMobile = state.matches;
+    });
+    this.router.events.subscribe((e) => {
+      if (this.isMobile && e instanceof NavigationEnd) {
+        this.sideNav.close();
+      }
     });
 
     (async () => {

@@ -2,9 +2,9 @@
   <mat-toolbar-row>
     <button
       *ngIf="isMobile"
-      aria-label="Toggle sidenav"
+      aria-label="Toggle navigation bar"
       mat-icon-button
-      (click)="sidenav.toggle()"
+      (click)="sideNav.toggle()"
     >
       <mat-icon>menu</mat-icon>
     </button>
@@ -25,10 +25,10 @@
 </mat-toolbar>
 <mat-sidenav-container>
   <mat-sidenav
-    #sidenav
+    #sideNav
     role="navigation"
     [opened]="!isMobile"
-    [mode]="isMobile ? 'push' : 'side'"
+    [mode]="isMobile ? 'over' : 'side'"
   >
     <div class="sidenav">
       <mat-nav-list>
