@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IFormGroup, IFormBuilder } from '@rxweb/types';
+import { IEntryWithId } from 'src/app/interfaces/IEntry';
 import { EntryService } from 'src/app/services/entry.service';
 
 interface FormEntry {
@@ -16,6 +17,7 @@ interface FormEntry {
   styleUrls: ['./entry-dialog.component.css'],
 })
 export class EntryDialogComponent implements OnInit {
+  isEditMode: boolean;
   form: IFormGroup<FormEntry>;
   formBuilder: IFormBuilder;
   addAnotherControl: FormControl;
@@ -23,16 +25,21 @@ export class EntryDialogComponent implements OnInit {
   constructor(
     private readonly entryService: EntryService,
     formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<EntryDialogComponent>
+    private dialogRef: MatDialogRef<EntryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public entry: IEntryWithId | null
   ) {
     this.formBuilder = formBuilder;
   }
 
   ngOnInit() {
+    this.isEditMode = this.entry !== null;
+    const entry = this.isEditMode
+      ? this.entry
+      : { value: '', timestamp: new Date() };
     this.form = this.formBuilder.group<FormEntry>({
-      date: [new Date(), Validators.required],
-      time: [getTimeStringFromDate(new Date()), Validators.required],
-      value: ['', Validators.required],
+      date: [entry.timestamp, Validators.required],
+      time: [getTimeStringFromDate(entry.timestamp), Validators.required],
+      value: [entry.value.toString(), Validators.required],
     });
     this.addAnotherControl = new FormControl(false);
   }
@@ -48,7 +55,11 @@ export class EntryDialogComponent implements OnInit {
     } else {
       this.dialogRef.close();
     }
-    await this.entryService.addEntry({ value, timestamp });
+    if (this.isEditMode) {
+      await this.entryService.updateEntry({ ...this.entry, value, timestamp });
+    } else {
+      await this.entryService.addEntry({ value, timestamp });
+    }
   }
 }
 

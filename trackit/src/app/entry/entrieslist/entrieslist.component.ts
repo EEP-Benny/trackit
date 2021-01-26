@@ -67,11 +67,15 @@ export class EntrieslistComponent implements OnInit {
     this.entries$ = this.entryService.getAllEntries();
   }
 
-  deleteEntry(entry: IEntryWithId) {
-    this.entryService.deleteEntry(entry);
-  }
-
   addEntry() {
     this.dialog.open(EntryDialogComponent);
+  }
+
+  editEntry(entry: IEntryWithId) {
+    this.dialog.open(EntryDialogComponent, { data: entry });
+  }
+
+  deleteEntry(entry: IEntryWithId) {
+    this.entryService.deleteEntry(entry);
   }
 }

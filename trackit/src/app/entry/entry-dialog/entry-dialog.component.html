@@ -1,5 +1,6 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
-  <h2 mat-dialog-title>Add new entry</h2>
+  <h2 mat-dialog-title *ngIf="!isEditMode">Add new entry</h2>
+  <h2 mat-dialog-title *ngIf="isEditMode">Edit entry</h2>
   <mat-dialog-content>
     <div class="horizontal">
       <mat-form-field>
@@ -29,6 +30,7 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <mat-checkbox
+      *ngIf="!isEditMode"
       color="primary"
       [formControl]="addAnotherControl"
       class="add-another"
