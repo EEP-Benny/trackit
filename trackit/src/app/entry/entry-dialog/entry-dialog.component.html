@@ -3,12 +3,7 @@
   <mat-dialog-content>
     <mat-form-field>
       <mat-label>Date (Time is still missing)</mat-label>
-      <input
-        matInput
-        type="datetime-local"
-        formControlName="timestamp"
-        [matDatepicker]="myDatepicker"
-      />
+      <input matInput formControlName="date" [matDatepicker]="myDatepicker" />
       <mat-datepicker-toggle
         matSuffix
         [for]="myDatepicker"
