@@ -41,7 +41,7 @@ export class EntryDialogComponent implements OnInit {
       time: [getTimeStringFromDate(entry.timestamp), Validators.required],
       value: [entry.value.toString(), Validators.required],
     });
-    this.addAnotherControl = new FormControl(false);
+    this.addAnotherControl = new FormControl(true); // TODO: Load from settings
   }
 
   async onSubmit() {
