@@ -8,6 +8,7 @@ import { NgxFilesizeModule } from 'ngx-filesize';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { ChartComponent } from './chart/chart.component';
+import { ChartPageComponent } from './chart-page/chart-page.component';
 import { EntriesPageComponent } from './entry/entries-page/entries-page.component';
 import { EntrieslistComponent } from './entry/entrieslist/entrieslist.component';
 import { EntryDialogComponent } from './entry/entry-dialog/entry-dialog.component';
@@ -19,6 +20,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
   declarations: [
     AppComponent,
     ChartComponent,
+    ChartPageComponent,
     EntrieslistComponent,
     EntryDialogComponent,
     EntriesPageComponent,
