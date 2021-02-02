@@ -1,0 +1,14 @@
+ti-chart {
+  // even though we use ViewEncapsulation.None, we only want to affect things inside the element
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  circle {
+    r: 3px;
+    fill: currentColor;
+  }
+}
