@@ -5,13 +5,13 @@ mat-dialog-content {
 .horizontal {
   display: flex;
   flex-direction: row;
-}
-.horizontal > * {
-  width: 7.5em;
-  flex: 1;
-}
-.horizontal > * + * {
-  margin-left: 1em;
+  & > * {
+    width: 7.5em;
+    flex: 1;
+  }
+  & > * + * {
+    margin-left: 1em;
+  }
 }
 
 .add-another {

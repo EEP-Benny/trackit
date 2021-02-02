@@ -14,7 +14,7 @@ interface FormEntry {
 @Component({
   selector: 'ti-entry-dialog',
   templateUrl: './entry-dialog.component.html',
-  styleUrls: ['./entry-dialog.component.css'],
+  styleUrls: ['./entry-dialog.component.scss'],
 })
 export class EntryDialogComponent implements OnInit {
   isEditMode: boolean;

@@ -2,9 +2,10 @@
   display: flex;
   height: 100%;
   width: 100%;
-}
-:host(.is-portrait) {
-  flex-direction: column;
+
+  &.is-portrait {
+    flex-direction: column;
+  }
 }
 
 ti-entrieslist,

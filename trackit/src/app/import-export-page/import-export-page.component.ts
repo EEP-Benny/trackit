@@ -27,7 +27,7 @@ type ImportInfo = {
 @Component({
   selector: 'ti-import-export-page',
   templateUrl: './import-export-page.component.html',
-  styleUrls: ['./import-export-page.component.css'],
+  styleUrls: ['./import-export-page.component.scss'],
 })
 export class ImportExportPageComponent implements OnInit {
   @ViewChild('exportDialog')

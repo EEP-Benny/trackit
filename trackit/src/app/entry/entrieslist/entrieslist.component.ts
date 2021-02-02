@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'ti-entrieslist',
   templateUrl: './entrieslist.component.html',
-  styleUrls: ['./entrieslist.component.css'],
+  styleUrls: ['./entrieslist.component.scss'],
   animations: [
     trigger('items', [
       transition(':enter', [

@@ -7,7 +7,7 @@
 
 .text {
   margin-top: 1em;
-}
-.text:empty {
-  display: none;
+  &:empty {
+    display: none;
+  }
 }
