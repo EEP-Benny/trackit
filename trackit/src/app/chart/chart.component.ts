@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
@@ -15,13 +16,17 @@ import { IEntry } from '../interfaces/IEntry';
   styleUrls: ['./chart.component.scss'],
 })
 export class ChartComponent implements OnInit {
-  private margin = { top: 20, right: 30, bottom: 30, left: 40 };
   private width: number;
   private height: number;
   private entries: IEntry[];
 
   private hostElement: HTMLElement;
-  private chartContainer: d3.Selection<SVGGElement, unknown, null, unknown>;
+
+  private xScaleBase = d3
+    .scaleTime()
+    .domain([d3.timeMonth.offset(new Date(), -1), new Date()]);
+  private xScale = this.xScaleBase;
+  private yScale = d3.scaleLinear();
   private dataContainer: d3.Selection<SVGGElement, unknown, null, unknown>;
   private xAxisContainer: d3.Selection<SVGGElement, unknown, null, unknown>;
   private yAxisContainer: d3.Selection<SVGGElement, unknown, null, unknown>;
@@ -30,60 +35,85 @@ export class ChartComponent implements OnInit {
     this.hostElement = elRef.nativeElement;
   }
 
+  @HostListener('window:resize')
+  private resize() {
+    if (!this.hostElement || !this.xAxisContainer || !this.yAxisContainer) {
+      return;
+    }
+    this.width = this.hostElement.clientWidth;
+    this.height = this.hostElement.clientHeight;
+
+    const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+    const left = margin.left;
+    const right = this.width - margin.right;
+    const top = margin.top;
+    const bottom = this.height - margin.bottom;
+
+    this.xScaleBase.range([left, right]);
+    this.xScale.range([left, right]);
+    this.yScale.range([bottom, top]);
+
+    this.xAxisContainer.attr('transform', `translate(0,${bottom})`);
+    this.yAxisContainer.attr('transform', `translate(${left},0)`);
+
+    this.redrawXAxis();
+    this.redrawYAxis();
+    this.redrawData();
+  }
+
   ngOnInit(): void {
-    this.width =
-      this.hostElement.clientWidth - this.margin.left - this.margin.right;
-    this.height =
-      this.hostElement.clientHeight - this.margin.top - this.margin.bottom;
+    this.initializeChart();
+    this.resize();
 
     // TODO: unsubscribe
     this.entryService.getAllEntries().subscribe((entries) => {
       this.entries = entries;
-      this.updateChart();
+      this.yScale.domain(d3.extent(entries, (d) => d.value));
+      this.redrawYAxis();
+      this.redrawData();
     });
   }
 
   private initializeChart() {
     const svg = d3.select(this.hostElement).append('svg');
-
-    this.chartContainer = svg
-      .append('g')
-      .attr(
-        'transform',
-        `translate(${this.margin.left},${this.margin.top + this.height})`
-      );
-    this.dataContainer = this.chartContainer.append('g');
-    this.xAxisContainer = this.chartContainer.append('g');
-    this.yAxisContainer = this.chartContainer.append('g');
+    svg.call(d3.zoom().on('zoom', (event) => this.zoomed(event)));
+    this.dataContainer = svg.append('g');
+    this.xAxisContainer = svg.append('g');
+    this.yAxisContainer = svg.append('g');
   }
 
-  private updateChart() {
-    if (!this.dataContainer || !this.xAxisContainer || !this.yAxisContainer) {
-      this.initializeChart();
-    }
-    const x = d3
-      .scaleUtc()
-      .domain(d3.extent(this.entries, (d) => d.timestamp))
-      .range([0, this.width]);
-    const y = d3
-      .scaleLinear()
-      .domain([0, d3.max(this.entries, (d) => d.value)])
-      .range([0, -this.height]);
+  private zoomed(event: d3.D3ZoomEvent<null, unknown>) {
+    this.xScale = event.transform.rescaleX(this.xScaleBase);
+    this.redrawXAxis();
+    this.redrawData();
+  }
 
+  private redrawXAxis() {
+    if (!this.xAxisContainer) {
+      return;
+    }
     this.xAxisContainer.call(
       d3
-        .axisBottom(x)
+        .axisBottom(this.xScale)
         .ticks(this.width / 80)
         .tickSizeOuter(0)
     );
-
-    this.yAxisContainer.call(d3.axisLeft(y).ticks(this.height / 40));
-
+  }
+  private redrawYAxis() {
+    if (!this.yAxisContainer) {
+      return;
+    }
+    this.yAxisContainer.call(d3.axisLeft(this.yScale).ticks(this.height / 40));
+  }
+  private redrawData() {
+    if (!this.dataContainer || !this.entries) {
+      return;
+    }
     this.dataContainer
       .selectAll('circle')
       .data(this.entries)
       .join((enter) => enter.append('circle'))
-      .attr('cx', (d) => x(d.timestamp))
-      .attr('cy', (d) => y(d.value));
+      .attr('cx', (d) => this.xScale(d.timestamp))
+      .attr('cy', (d) => this.yScale(d.value));
   }
 }
