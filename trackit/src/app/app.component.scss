@@ -12,6 +12,11 @@ mat-sidenav {
   width: 250px;
 }
 
+main {
+  display: block;
+  height: 100%;
+}
+
 .sidenav {
   display: flex;
   flex-direction: column;

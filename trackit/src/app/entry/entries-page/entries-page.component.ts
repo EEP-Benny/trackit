@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Component, HostBinding, OnInit } from '@angular/core';
 
 @Component({
   selector: 'ti-entries-page',
@@ -6,7 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./entries-page.component.css'],
 })
 export class EntriesPageComponent implements OnInit {
-  constructor() {}
+  @HostBinding('class.is-portrait')
+  isPortrait: boolean;
 
-  ngOnInit(): void {}
+  constructor(private breakpointObserver: BreakpointObserver) {}
+
+  ngOnInit(): void {
+    this.breakpointObserver
+      .observe('(orientation: portrait)')
+      .subscribe((state) => {
+        this.isPortrait = state.matches;
+      });
+  }
 }

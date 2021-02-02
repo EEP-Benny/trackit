@@ -7,6 +7,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
+import { ChartComponent } from './chart/chart.component';
 import { EntriesPageComponent } from './entry/entries-page/entries-page.component';
 import { EntrieslistComponent } from './entry/entrieslist/entrieslist.component';
 import { EntryDialogComponent } from './entry/entry-dialog/entry-dialog.component';
@@ -17,6 +18,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
 @NgModule({
   declarations: [
     AppComponent,
+    ChartComponent,
     EntrieslistComponent,
     EntryDialogComponent,
     EntriesPageComponent,
