@@ -10,6 +10,23 @@ import { IEntry } from '../interfaces/IEntry';
 import { csvFormat, csvParseRows } from 'd3-dsv';
 import { EntryService } from '../services/entry.service';
 
+const getTextFromFile = (file: File) => {
+  if (file.text) {
+    return file.text();
+  }
+  // fallback for Edge and other browsers not supporting file.text()
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      resolve(event.target.result as string);
+    };
+    reader.onerror = (event) => {
+      reject(event.target.error);
+    };
+    reader.readAsText(file);
+  });
+};
+
 type ExportInfo = {
   date: Date;
   entryCount: number;
@@ -140,7 +157,7 @@ export class ImportExportPageComponent implements OnInit {
   }
 
   async readEntriesFromFile(file: File) {
-    const csvContent = await file.text();
+    const csvContent = await getTextFromFile(file);
     const csvRows = csvParseRows(csvContent);
     const headerRow = csvRows.shift(); // gets the first row and removes it from the array
     const timestampIndex = headerRow.indexOf('timestamp');
