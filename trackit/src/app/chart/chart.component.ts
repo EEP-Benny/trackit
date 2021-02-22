@@ -27,9 +27,11 @@ export class ChartComponent implements OnInit {
     .domain([d3.timeMonth.offset(new Date(), -1), new Date()]);
   private xScale = this.xScaleBase;
   private yScale = d3.scaleLinear();
-  private dataContainer: d3.Selection<SVGGElement, unknown, null, unknown>;
+  private canvas: d3.Selection<HTMLCanvasElement, unknown, null, unknown>;
+  private context: CanvasRenderingContext2D;
   private xAxisContainer: d3.Selection<SVGGElement, unknown, null, unknown>;
   private yAxisContainer: d3.Selection<SVGGElement, unknown, null, unknown>;
+  private redrawTimeout: d3.Timer;
 
   constructor(private readonly entryService: EntryService, elRef: ElementRef) {
     this.hostElement = elRef.nativeElement;
@@ -37,24 +39,18 @@ export class ChartComponent implements OnInit {
 
   @HostListener('window:resize')
   private resize() {
-    if (!this.hostElement || !this.xAxisContainer || !this.yAxisContainer) {
+    if (!this.hostElement) {
       return;
     }
     this.width = this.hostElement.clientWidth;
     this.height = this.hostElement.clientHeight;
 
-    const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-    const left = margin.left;
-    const right = this.width - margin.right;
-    const top = margin.top;
-    const bottom = this.height - margin.bottom;
+    this.canvas.attr('width', this.width);
+    this.canvas.attr('height', this.height);
 
-    this.xScaleBase.range([left, right]);
-    this.xScale.range([left, right]);
-    this.yScale.range([bottom, top]);
-
-    this.xAxisContainer.attr('transform', `translate(0,${bottom})`);
-    this.yAxisContainer.attr('transform', `translate(${left},0)`);
+    this.xScaleBase.range([0, this.width]);
+    this.xScale.range([0, this.width]);
+    this.yScale.range([this.height, 0]);
 
     this.redrawXAxis();
     this.redrawYAxis();
@@ -68,24 +64,30 @@ export class ChartComponent implements OnInit {
     // TODO: unsubscribe
     this.entryService.getAllEntries().subscribe((entries) => {
       this.entries = entries;
-      this.yScale.domain(d3.extent(entries, (d) => d.value));
+      const [yMin, yMax] = d3.extent(entries, (d) => d.value);
+      const padding = (yMax - yMin) * 0.01;
+      this.yScale.domain([yMin - padding, yMax + padding]);
       this.redrawYAxis();
       this.redrawData();
     });
   }
 
   private initializeChart() {
-    const svg = d3.select(this.hostElement).append('svg');
-    svg.call(d3.zoom().on('zoom', (event) => this.zoomed(event)));
-    this.dataContainer = svg.append('g');
-    this.xAxisContainer = svg.append('g');
-    this.yAxisContainer = svg.append('g');
+    const host = d3.select(this.hostElement);
+    this.canvas = host.append('canvas');
+    this.canvas.call(d3.zoom().on('zoom', (event) => this.zoomed(event)));
+    this.context = this.canvas.node().getContext('2d');
+    this.xAxisContainer = host.append('svg').attr('class', 'bottom');
+    this.yAxisContainer = host.append('svg').attr('class', 'left');
   }
 
   private zoomed(event: d3.D3ZoomEvent<null, unknown>) {
     this.xScale = event.transform.rescaleX(this.xScaleBase);
-    this.redrawXAxis();
-    this.redrawData();
+    this.redrawTimeout?.stop();
+    this.redrawTimeout = d3.timeout(() => {
+      this.redrawXAxis();
+      this.redrawData();
+    });
   }
 
   private redrawXAxis() {
@@ -103,17 +105,28 @@ export class ChartComponent implements OnInit {
     if (!this.yAxisContainer) {
       return;
     }
-    this.yAxisContainer.call(d3.axisLeft(this.yScale).ticks(this.height / 40));
+    this.yAxisContainer.call(
+      d3
+        .axisLeft(this.yScale)
+        .ticks(this.height / 40)
+        .tickSizeOuter(0)
+    );
   }
   private redrawData() {
-    if (!this.dataContainer || !this.entries) {
+    if (!this.entries) {
       return;
     }
-    this.dataContainer
-      .selectAll('circle')
-      .data(this.entries)
-      .join((enter) => enter.append('circle'))
-      .attr('cx', (d) => this.xScale(d.timestamp))
-      .attr('cy', (d) => this.yScale(d.value));
+    this.context.clearRect(0, 0, this.width, this.height);
+    this.entries.forEach((d: IEntry) => {
+      const x = this.xScale(d.timestamp);
+      const y = this.yScale(d.value);
+      const radius = 3;
+      const startAngle = 0;
+      const endAngle = 2 * Math.PI;
+      this.context.beginPath();
+      this.context.fillStyle = '#000000';
+      this.context.arc(x, y, radius, startAngle, endAngle);
+      this.context.fill();
+    });
   }
 }
