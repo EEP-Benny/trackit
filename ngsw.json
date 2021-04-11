@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1613992539770,
+  "timestamp": 1618129674518,
   "index": "/trackit/index.html",
   "assetGroups": [
     {
@@ -13,14 +13,14 @@
       "urls": [
         "/trackit/favicon.ico",
         "/trackit/index.html",
-        "/trackit/main-es2015.eee73a7872e5f6a79ddd.js",
-        "/trackit/main-es5.eee73a7872e5f6a79ddd.js",
+        "/trackit/main-es2015.343ac588a8fb8c211902.js",
+        "/trackit/main-es5.343ac588a8fb8c211902.js",
         "/trackit/manifest.webmanifest",
         "/trackit/polyfills-es2015.a93358e1cf8813cb4159.js",
         "/trackit/polyfills-es5.f78a388c7e0e9167ed89.js",
         "/trackit/runtime-es2015.a1ac991fc00ebf39524f.js",
         "/trackit/runtime-es5.a1ac991fc00ebf39524f.js",
-        "/trackit/styles.30b435717454d24e7c85.css"
+        "/trackit/styles.eefde43783fa4991075f.css"
       ],
       "patterns": []
     },
@@ -55,15 +55,15 @@
     "/trackit/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
     "/trackit/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
     "/trackit/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/trackit/index.html": "9c8f827b8bec545427d4dadccfcdb0cd67a06751",
-    "/trackit/main-es2015.eee73a7872e5f6a79ddd.js": "3b0b7ad2adb9e011595ddf2812b9b8ca78bb55f4",
-    "/trackit/main-es5.eee73a7872e5f6a79ddd.js": "896105fb591ed278ad72e555dec0883458568754",
+    "/trackit/index.html": "40672b7ac123986700aa997a0ca04d4753487670",
+    "/trackit/main-es2015.343ac588a8fb8c211902.js": "c4ead4430a832f74d264885bd89d87db7d1ece44",
+    "/trackit/main-es5.343ac588a8fb8c211902.js": "151f5d8ec66a3dccbb0612ee454cbec7ec74776a",
     "/trackit/manifest.webmanifest": "1d1aaa6715f1c6779f45815d68d3c092510cf61d",
     "/trackit/polyfills-es2015.a93358e1cf8813cb4159.js": "65c537467564ee0ba776b629f71ed3413413a7cb",
     "/trackit/polyfills-es5.f78a388c7e0e9167ed89.js": "214f4b46e6da9fadd1fae2439f1791ee1ad0f563",
     "/trackit/runtime-es2015.a1ac991fc00ebf39524f.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
     "/trackit/runtime-es5.a1ac991fc00ebf39524f.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "/trackit/styles.30b435717454d24e7c85.css": "99e509ce2228c51a454c77adcef61c6cff803a3e"
+    "/trackit/styles.eefde43783fa4991075f.css": "51e98aa9638f50c032a103ef96f1d178665e66b4"
   },
   "navigationUrls": [
     {
