@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IFormGroup, IFormBuilder } from '@rxweb/types';
 import { IEntryWithId } from 'src/app/interfaces/IEntry';
@@ -20,11 +20,11 @@ export class EntryDialogComponent implements OnInit {
   isEditMode: boolean;
   form: IFormGroup<FormEntry>;
   formBuilder: IFormBuilder;
-  addAnotherControl: FormControl;
+  addAnotherControl: UntypedFormControl;
 
   constructor(
     private readonly entryService: EntryService,
-    formBuilder: FormBuilder,
+    formBuilder: UntypedFormBuilder,
     private dialogRef: MatDialogRef<EntryDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public entry: IEntryWithId | null
   ) {
@@ -41,7 +41,7 @@ export class EntryDialogComponent implements OnInit {
       time: [getTimeStringFromDate(entry.timestamp), Validators.required],
       value: [entry.value.toString(), Validators.required],
     });
-    this.addAnotherControl = new FormControl(true); // TODO: Load from settings
+    this.addAnotherControl = new UntypedFormControl(true); // TODO: Load from settings
   }
 
   async onSubmit() {
